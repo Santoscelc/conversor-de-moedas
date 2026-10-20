@@ -1,0 +1,96 @@
+
+const valor = document.getElementById("valor");
+const origem = document.getElementById("origem");
+const destino = document.getElementById("destino");
+const resultado = document.getElementById("valorConvertido");
+const cotacao = document.getElementById("cotacao");
+const status = document.getElementById("status");
+
+const formatar = (numero, moeda) =>
+  new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: moeda
+  }).format(numero);
+
+async function converter() {
+  const quantidade = Number(valor.value);
+  const de = origem.value;
+  const para = destino.value;
+
+  if (
+    valor.value.trim() === "" ||
+    !Number.isFinite(quantidade) ||
+    quantidade < 0
+  ) {
+    resultado.textContent = "Valor inválido";
+    cotacao.textContent = "";
+    status.textContent =
+      "Digite um valor igual ou maior que zero.";
+    return;
+  }
+
+  if (de === para) {
+    resultado.textContent = formatar(quantidade, para);
+    cotacao.textContent = `1 ${de} = 1 ${para}`;
+    status.textContent = "Mesma moeda selecionada.";
+    return;
+  }
+
+  resultado.textContent = "Consultando...";
+  cotacao.textContent = "";
+  status.textContent = "Buscando cotação atualizada...";
+
+  try {
+    const url = `https://open.er-api.com/v6/latest/${de}`;
+    const resposta = await fetch(url);
+
+    if (!resposta.ok) {
+      throw new Error("Falha na consulta");
+    }
+
+    const dados = await resposta.json();
+
+    if (
+      dados.result !== "success" ||
+      typeof dados.rates?.[para] !== "number"
+    ) {
+      throw new Error("Cotação indisponível");
+    }
+
+    const taxa = dados.rates[para];
+    const convertido = quantidade * taxa;
+
+    resultado.textContent = formatar(convertido, para);
+
+    cotacao.textContent =
+      `1 ${de} = ${taxa.toLocaleString("pt-BR")} ${para}`;
+
+    status.textContent = dados.time_last_update_utc
+      ? `Última atualização da fonte: ${dados.time_last_update_utc}`
+      : "Cotação recebida com sucesso.";
+  } catch (erro) {
+    resultado.textContent = "Não foi possível converter";
+    cotacao.textContent = "";
+    status.textContent =
+      "Verifique sua conexão e tente novamente.";
+  }
+}
+
+document.getElementById("converter")
+  .addEventListener("click", converter);
+
+document.getElementById("trocar")
+  .addEventListener("click", () => {
+    const moeda = origem.value;
+    origem.value = destino.value;
+    destino.value = moeda;
+    converter();
+  });
+
+valor.addEventListener("keydown", (evento) => {
+  if (evento.key === "Enter") {
+    converter();
+  }
+});
+
+converter();

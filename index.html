@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Moedas</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1>💱 Conversor de Moedas</h1>
+    <p class="subtitle">Converta moedas de forma simples</p>
+
+    <label for="valor">Valor para converter</label>
+    <input type="number" id="valor" value="100" min="0" step="any"
+      placeholder="Digite um valor">
+
+    <div class="moedas">
+      <div>
+        <label for="origem">De</label>
+        <select id="origem">
+          <option value="BRL">BRL - Real</option>
+          <option value="USD">USD - Dólar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - Libra</option>
+          <option value="JPY">JPY - Iene</option>
+          <option value="ARS">ARS - Peso argentino</option>
+          <option value="CAD">CAD - Dólar canadense</option>
+          <option value="CHF">CHF - Franco suíço</option>
+          <option value="AUD">AUD - Dólar australiano</option>
+          <option value="CNY">CNY - Yuan chinês</option>
+        </select>
+      </div>
+
+      <button class="trocar" id="trocar" type="button"
+        aria-label="Inverter moedas">⇄</button>
+
+      <div>
+        <label for="destino">Para</label>
+        <select id="destino">
+          <option value="USD">USD - Dólar</option>
+          <option value="BRL">BRL - Real</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - Libra</option>
+          <option value="JPY">JPY - Iene</option>
+          <option value="ARS">ARS - Peso argentino</option>
+          <option value="CAD">CAD - Dólar canadense</option>
+          <option value="CHF">CHF - Franco suíço</option>
+          <option value="AUD">AUD - Dólar australiano</option>
+          <option value="CNY">CNY - Yuan chinês</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="converter" id="converter" type="button">
+      Converter agora
+    </button>
+
+    <section class="resultado" aria-live="polite">
+      <p>Valor convertido</p>
+      <strong id="valorConvertido">Aguardando conversão...</strong>
+      <p id="cotacao"></p>
+      <p id="status">Consultando cotação...</p>
+    </section>
+  </main>
+</body>
+</html>
